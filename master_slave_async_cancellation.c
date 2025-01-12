@@ -25,6 +25,16 @@
 
 pthread_t slaves[N_SLAVES];
 
+void memory_cleanup_handler(void *arg) {
+	printf("%s invoked...\n", __FUNCTION__);
+	free(arg);
+}
+
+void file_cleanup_handler(void *arg) {
+	printf("%s invoked...\n", __FUNCTION__);
+	fclose((FILE *)arg);
+}
+
 void* write_into_file(void *arg){
 
 	char file_name[64];
@@ -40,6 +50,8 @@ void* write_into_file(void *arg){
 
 	int *thread_id = (int  *)arg;
 
+	pthread_cleanup_push(memory_cleanup_handler, arg);
+
 	sprintf(file_name, "thread_%d.txt", *thread_id);
 
 	FILE *fptr = fopen(file_name, "w");
@@ -50,12 +62,18 @@ void* write_into_file(void *arg){
 		return 0;
 	}
 
+	pthread_cleanup_push(file_cleanup_handler, fptr);
+
 	while(1) {
 		len = sprintf(string_to_write, "%d : I am thread %d\n", count++, *thread_id);
 		fwrite(string_to_write, sizeof(char), len, fptr);
 		fflush(fptr);
 		sleep(1);
 	}
+
+	pthread_cleanup_pop(0);
+	pthread_cleanup_pop(0);
+
 	return 0; 
 }
 
