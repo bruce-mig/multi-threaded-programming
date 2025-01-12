@@ -1,3 +1,20 @@
+/*
+ * =====================================================================================
+ *
+ *       Filename:  joinable_threads.c
+ *
+ *    Description: This file demonstrates the use of POSIX threads joinable API 
+ *
+ *        Version:  1.0
+ *        Created:  12/01/2025 11:28:04 AM
+ *       Revision:  none
+ *       Compiler:  gcc
+ *
+ *         Author:  BRUCE MIGERI (), bmigeri@gmail.com
+ *
+ * =====================================================================================
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h> /* For working with POSIX threads */
@@ -8,7 +25,10 @@
 pthread_t pthread2;
 pthread_t pthread3;
 
-void* thread_fn_callback(void *arg) {
+/* A thread callback fn must have following prototypes 
+ * void *(*thread_fn)(void *)
+ * */
+static void* thread_fn_callback(void *arg) {
     int th_id = *(int *)arg; // Extract thread ID from argument
     free(arg); // Free the dynamically allocated memory for thread ID
     int rc = 0;
@@ -39,19 +59,22 @@ void thread_create(pthread_t *pthread_handle, int th_id) {
         PTHREAD_CREATE_JOINABLE
         /* PTHREAD_CREATE_DETACHED */);
     
-    pthread_create(pthread_handle,
+    int rc = pthread_create(pthread_handle,
                      &attr, 
                      thread_fn_callback,
                      (void *)_th_id);
-
+    if (rc != 0) {
+        printf("Error occurred, thread could not be created, errno = %d\n", rc);
+		exit(0);
+    }
  
 }
 
 
 int main(int argc, char **argv) {
 
-    void *thread_result2;
-    void *thread_result3;
+    void *thread_result2 = NULL;
+    void *thread_result3 = NULL;
 
     thread_create(&pthread2, 2);
     thread_create(&pthread3, 10);
