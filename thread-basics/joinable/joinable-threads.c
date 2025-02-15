@@ -31,6 +31,7 @@ pthread_t pthread3;
 static void* thread_fn_callback(void *arg) {
     int th_id = *(int *)arg; // Extract thread ID from argument
     free(arg); // Free the dynamically allocated memory for thread ID
+    
     int rc = 0;
 
     // Simulate some work by the thread
