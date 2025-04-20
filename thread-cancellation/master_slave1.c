@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  master_slace.c
+ *       Filename:  master_slave.c
  *
  *    Description: This file demonstrates the use of wait and signal APIs
  *
