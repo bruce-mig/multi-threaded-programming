@@ -141,7 +141,7 @@ int send_udp_msg(char *dest_ip_addr, uint32_t dest_port_no, char *msg,
    dest.sin_family = AF_INET;
    dest.sin_port = dest_port_no;
    struct hostent *host = (struct hostent *)gethostbyname(dest_ip_addr);
-   dest.sin_addr = *((struct in_addr *)host->h_addr_list);
+   dest.sin_addr = *((struct in_addr *)host->h_addr);
    int addr_len = sizeof(struct sockaddr);
    int sock_fd;
 
