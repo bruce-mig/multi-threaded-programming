@@ -25,9 +25,26 @@ typedef struct thread_arg_pkg_ {
    recv_fn_cb recv_fn;
 } thread_arg_pkg_t;
 
+void udp_server_thread_cleanup_handler_close_skt(void *arg) {
+
+   int udp_sock_fd = (int)arg;
+   close(udp_sock_fd);
+   printf("Socket closed\n");
+}
+
+void udp_server_thread_cleanup_handler_free_memory(void *arg) {
+
+   free(arg);
+   printf("Memory freed\n");
+}
+
 /* UDP Server code*/
 
 static void *_udp_server_create_and_start(void *arg) {
+
+   /* Set Cancellable properties of the thread */
+   pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, 0);
+   pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, 0);
 
    thread_arg_pkg_t *thread_arg_pkg = (thread_arg_pkg_t *)arg;
 
@@ -62,6 +79,11 @@ static void *_udp_server_create_and_start(void *arg) {
    struct sockaddr_in client_addr;
    int bytes_recvd = 0, addr_len = sizeof(client_addr);
 
+   pthread_cleanup_push(udp_server_thread_cleanup_handler_close_skt,
+                        (void *)udp_sock_fd);
+   pthread_cleanup_push(udp_server_thread_cleanup_handler_free_memory,
+                        (void *)recv_buffer);
+
    while (1) {
 
       memset(recv_buffer, 0, MAX_PACKET_BUFFER_SIZE);
@@ -74,7 +96,14 @@ static void *_udp_server_create_and_start(void *arg) {
               network_covert_ip_n_to_p(
                   (uint32_t)htonl(client_addr.sin_addr.s_addr), 0),
               client_addr.sin_port);
+
+      /* insert cancellation point to Check if we should cancel before
+       * blocking again*/
+      pthread_testcancel();
    }
+
+   pthread_cleanup_pop(0);
+   pthread_cleanup_pop(0);
    return 0;
 }
 
@@ -112,7 +141,7 @@ int send_udp_msg(char *dest_ip_addr, uint32_t dest_port_no, char *msg,
    dest.sin_family = AF_INET;
    dest.sin_port = dest_port_no;
    struct hostent *host = (struct hostent *)gethostbyname(dest_ip_addr);
-   dest.sin_addr = *((struct in_addr *)host->h_addr);
+   dest.sin_addr = *((struct in_addr *)host->h_addr_list);
    int addr_len = sizeof(struct sockaddr);
    int sock_fd;
 
