@@ -46,7 +46,7 @@ void main_menu() {
          printf("Enter Destination :");
          scanf("%s", dest);
          printf("Mask : ");
-         scanf("%s", &mask);
+         scanf("%d", &mask); // todo: fix warning
          printf("Enter oif name :");
          scanf("%s", oif);
          printf("Enter Gateway IP :");
