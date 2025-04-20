@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-extern void create_subscriber_thread(uint32_t client_id);
+extern void create_subscriber_thread(uintptr_t client_id);
 
 rt_table_t publisher_rt_table;
 
@@ -46,7 +46,7 @@ void main_menu() {
          printf("Enter Destination :");
          scanf("%s", dest);
          printf("Mask : ");
-         scanf("%d", &mask);
+         scanf("%s", &mask);
          printf("Enter oif name :");
          scanf("%s", oif);
          printf("Enter Gateway IP :");
