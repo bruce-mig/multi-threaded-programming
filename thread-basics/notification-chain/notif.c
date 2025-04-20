@@ -3,7 +3,7 @@
  *
  *       Filename:  notif.c
  *
- *    Description: This file implements Generaic Notif Chain structures
+ *    Description: This file implements Generic Notif Chain structures
  * definitions
  *
  *        Version:  1.0
