@@ -87,7 +87,7 @@ bool rt_delete_rt_entry(rt_table_t *rt_table, char *dest, char mask) {
 
    rt_entry_t *rt_entry = NULL;
 
-   ITERTAE_RT_TABLE_BEGIN(rt_table, rt_entry) {
+   ITERATE_RT_TABLE_BEGIN(rt_table, rt_entry) {
 
       if (strncmp(rt_entry->rt_entry_keys.dest, dest,
                   sizeof(rt_entry->rt_entry_keys.dest)) == 0 &&
@@ -106,7 +106,7 @@ bool rt_delete_rt_entry(rt_table_t *rt_table, char *dest, char mask) {
          return true;
       }
    }
-   ITERTAE_RT_TABLE_END(rt_table, curr);
+   ITERATE_RT_TABLE_END(rt_table, rt_entry);
 
    return false;
 }
@@ -119,7 +119,7 @@ void rt_dump_rt_table(rt_table_t *rt_table) {
 
    rt_entry_t *rt_entry = NULL;
 
-   ITERTAE_RT_TABLE_BEGIN(rt_table, rt_entry) {
+   ITERATE_RT_TABLE_BEGIN(rt_table, rt_entry) {
 
       printf("%-20s %-4d %-20s %s\n", rt_entry->rt_entry_keys.dest,
              rt_entry->rt_entry_keys.mask, rt_entry->gw_ip, rt_entry->oif);
@@ -137,14 +137,14 @@ void rt_dump_rt_table(rt_table_t *rt_table) {
       ITERATE_GLTHREAD_END(&rt_entry->nfc->notif_chain_head, curr)
       printf("\n");
    }
-   ITERTAE_RT_TABLE_END(rt_table, rt_entry);
+   ITERATE_RT_TABLE_END(rt_table, rt_entry);
 }
 
 rt_entry_t *rt_look_up_rt_entry(rt_table_t *rt_table, char *dest, char mask) {
 
    rt_entry_t *rt_entry = NULL;
 
-   ITERTAE_RT_TABLE_BEGIN(rt_table, rt_entry) {
+   ITERATE_RT_TABLE_BEGIN(rt_table, rt_entry) {
       if ((strncmp(rt_entry->rt_entry_keys.dest, dest,
                    sizeof(rt_entry->rt_entry_keys.dest)) == 0) &&
           rt_entry->rt_entry_keys.mask == mask) {
@@ -152,7 +152,7 @@ rt_entry_t *rt_look_up_rt_entry(rt_table_t *rt_table, char *dest, char mask) {
          return rt_entry;
       }
    }
-   ITERTAE_RT_TABLE_END(rt_table, rt_entry);
+   ITERATE_RT_TABLE_END(rt_table, rt_entry);
    return NULL;
 }
 

@@ -39,7 +39,7 @@ typedef struct rt_entry_keys_ {
 
 typedef struct rt_entry_ {
 
-   /* A Structure which represnets only the keys of the
+   /* A Structure which represents only the keys of the
     * Routing Table.*/
    rt_entry_keys_t rt_entry_keys;
 
@@ -98,14 +98,14 @@ static inline void rt_entry_remove(rt_table_t *rt_table, rt_entry_t *rt_entry) {
    rt_entry->next = 0;
 }
 
-#define ITERTAE_RT_TABLE_BEGIN(rt_table_ptr, rt_entry_ptr)                     \
+#define ITERATE_RT_TABLE_BEGIN(rt_table_ptr, rt_entry_ptr)                     \
    {                                                                           \
       rt_entry_t *_next_rt_entry;                                              \
       for ((rt_entry_ptr) = (rt_table_ptr)->head; (rt_entry_ptr);              \
            (rt_entry_ptr) = _next_rt_entry) {                                  \
          _next_rt_entry = (rt_entry_ptr)->next;
 
-#define ITERTAE_RT_TABLE_END(rt_table_ptr, rt_entry_ptr)                       \
+#define ITERATE_RT_TABLE_END(rt_table_ptr, rt_entry_ptr)                       \
    }                                                                           \
    }
 
