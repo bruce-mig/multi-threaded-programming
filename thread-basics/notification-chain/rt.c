@@ -100,7 +100,6 @@ bool rt_delete_rt_entry(rt_table_t *rt_table, char *dest, char mask) {
          nfc_delete_all_nfce(rt_entry->nfc);
          free(rt_entry->nfc);
          rt_entry->nfc = NULL;
-         free(rt_entry->nfc);
 
          free(rt_entry);
          return true;
