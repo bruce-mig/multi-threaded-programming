@@ -5,3 +5,5 @@
 
 # Ignore all .o files
 *.o
+
+*.txt
